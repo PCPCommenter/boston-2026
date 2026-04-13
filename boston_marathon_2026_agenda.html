@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boston Marathon 2026 — Trip Agenda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-50: #E6F1FB;
+      --blue-200: #85B7EB;
+      --blue-400: #378ADD;
+      --blue-600: #185FA5;
+      --blue-800: #0C447C;
+      --teal-50: #E1F5EE;
+      --teal-400: #1D9E75;
+      --teal-600: #0F6E56;
+      --teal-800: #085041;
+      --amber-50: #FAEEDA;
+      --amber-400: #BA7517;
+      --amber-800: #633806;
+      --coral-400: #D85A30;
+      --coral-800: #993C1D;
+      --purple-400: #7F77DD;
+      --purple-800: #3C3489;
+      --gray-100: #f7f6f3;
+      --gray-200: #eeece8;
+      --gray-300: #ddd9d2;
+      --gray-500: #888780;
+      --gray-700: #444441;
+      --gray-900: #1a1a18;
+      --text: #1a1a18;
+      --text-muted: #5a5955;
+      --text-faint: #888780;
+      --border: #e0ddd6;
+      --bg: #faf9f6;
+      --card-bg: #ffffff;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'Source Sans 3', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Hero header */
+    .hero {
+      background: var(--gray-900);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '26.2';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--serif);
+      font-size: 160px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+    .hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
+    .hero-title { font-family: var(--serif); font-size: clamp(28px, 5vw, 44px); font-weight: 700; line-height: 1.15; color: #fff; margin-bottom: 8px; }
+    .hero-title span { color: #5DCAA5; }
+    .hero-subtitle { font-size: 15px; color: rgba(255,255,255,0.55); font-weight: 300; margin-bottom: 1.5rem; }
+    .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-pill {
+      font-size: 12px; font-weight: 500; padding: 5px 12px;
+      border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+    }
+    .hero-pill.accent { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+
+    /* Updated badge */
+    .updated-bar {
+      background: var(--gray-200);
+      border-bottom: 0.5px solid var(--border);
+      padding: 8px 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+    .updated-bar strong { color: var(--text-muted); }
+
+    /* Main content */
+    .content { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+    /* Party section */
+    .party-section {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      background: var(--card-bg); border: 0.5px solid var(--border);
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .party-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); width: 100%; margin-bottom: 4px; }
+    .person-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--gray-100); border: 0.5px solid var(--border);
+      border-radius: 30px; padding: 6px 14px 6px 8px;
+    }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600;
+    }
+    .av-blue { background: var(--blue-50); color: var(--blue-800); }
+    .av-teal { background: var(--teal-50); color: var(--teal-800); }
+    .av-amber { background: var(--amber-50); color: var(--amber-800); }
+    .person-name { font-size: 13px; font-weight: 500; color: var(--text); }
+    .person-role { font-size: 11px; color: var(--text-faint); }
+
+    /* Day block */
+    .day-block { margin-bottom: 2.5rem; }
+    .day-header {
+      display: flex; align-items: baseline; gap: 14px;
+      margin-bottom: 1rem; padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--gray-200);
+    }
+    .day-name { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--text); }
+    .day-date { font-size: 13px; color: var(--text-faint); }
+    .day-tag {
+      margin-left: auto; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .tag-race { background: var(--blue-600); color: #fff; }
+    .tag-arrival { background: var(--teal-50); color: var(--teal-800); }
+    .tag-departure { background: var(--amber-50); color: var(--amber-800); }
+
+    /* Session */
+    .session { margin-bottom: 10px; }
+    .session-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-faint);
+      margin-bottom: 6px; padding-left: 2px;
+    }
+
+    /* Event cards */
+    .event-card {
+      background: var(--card-bg);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      border-left-width: 3px;
+    }
+    .event-card + .event-card { margin-top: 8px; }
+    .ev-blue { border-left-color: var(--blue-400); }
+    .ev-teal { border-left-color: var(--teal-400); }
+    .ev-amber { border-left-color: var(--amber-400); }
+    .ev-coral { border-left-color: var(--coral-400); }
+    .ev-purple { border-left-color: var(--purple-400); }
+    .ev-race {
+      background: var(--blue-50);
+      border: 0.5px solid #B5D4F4;
+      border-left: 4px solid var(--blue-600);
+    }
+    .ev-gray { border-left-color: var(--gray-300); }
+
+    .event-badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+    .badge-race { background: var(--blue-600); color: #fff; }
+    .badge-flight { background: var(--teal-50); color: var(--teal-800); border: 0.5px solid #9FE1CB; }
+    .badge-tentative { background: var(--amber-50); color: var(--amber-800); border: 0.5px solid #FAC775; }
+
+    .event-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .event-detail { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .event-note { font-size: 12px; color: var(--text-faint); margin-top: 5px; font-style: italic; }
+
+    /* Flight display */
+    .flight-row { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
+    .flight-city { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--text); }
+    .flight-time { font-size: 12px; color: var(--text-faint); margin-top: 1px; }
+    .flight-line { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .flight-duration { font-size: 11px; color: var(--text-faint); }
+    .flight-track { width: 100%; height: 1px; background: var(--border); position: relative; }
+    .flight-track::after { content: '▶'; position: absolute; right: -4px; top: -6px; font-size: 9px; color: var(--text-faint); }
+    .flight-meta { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+
+    /* Who's attending chips */
+    .who-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .who-chip {
+      font-size: 11px; padding: 2px 9px;
+      background: var(--gray-100);
+      border: 0.5px solid var(--border);
+      border-radius: 20px; color: var(--text-muted);
+    }
+
+    /* Lodging card */
+    .lodging-card {
+      background: var(--gray-900); color: #fff;
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .lodging-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+    .lodging-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+    .lodging-name { font-family: var(--serif); font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+    .lodging-addr { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .lodging-dates { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 6px; }
+
+    /* Footer */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-faint);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 2rem 1.25rem 2rem; }
+      .content { padding: 1.5rem 1.25rem 3rem; }
+      .hero::before { font-size: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Trip Agenda</div>
+    <h1 class="hero-title">Boston Marathon <span>2026</span></h1>
+    <p class="hero-subtitle">Todd &amp; Laura · Allison &amp; Corey · April 16–21, 2026</p>
+    <div class="hero-pills">
+      <span class="hero-pill accent">Race Day: Mon Apr 20</span>
+      <span class="hero-pill">Wave 1 · Corral 2 · 10:00 AM</span>
+      <span class="hero-pill">Bib #1594</span>
+      <span class="hero-pill">UA DOZBZM</span>
+    </div>
+  </div>
+</div>
+
+<div class="updated-bar">
+  Last updated: <strong>April 13, 2026</strong> &nbsp;·&nbsp; Share this page with your travel companions
+</div>
+
+<div class="content">
+
+  <!-- Travel Party -->
+  <div class="party-section">
+    <div class="party-label">Travel Party</div>
+    <div class="person-chip">
+      <div class="avatar av-blue">TL</div>
+      <div><div class="person-name">Todd</div><div class="person-role">Runner</div></div>
+    </div>
+    <div class="person-chip">
+      <div class="avatar av-blue">LL</div>
+      <div><div class="person-name">Laura</div><div class="person-role">Spectator</div></div>
+    </div>
+    <div class="person-chip">
+      <div class="avatar av-teal">AL</div>
+      <div><div class="person-name">Allison</div><div class="person-role">Travel companion</div></div>
+    </div>
+    <div class="person-chip">
+      <div class="avatar av-teal">CO</div>
+      <div><div class="person-name">Corey</div><div class="person-role">Travel companion</div></div>
+    </div>
+  </div>
+
+  <!-- Lodging -->
+  <div class="lodging-card">
+    <div class="lodging-icon">🏨</div>
+    <div>
+      <div class="lodging-label">Lodging — All Four</div>
+      <div class="lodging-name">Holiday Inn Boston – Cambridge Area</div>
+      <div class="lodging-addr">30 Washington Street, Somerville, MA 02143</div>
+      <div class="lodging-dates">Todd &amp; Laura: Apr 16–21 &nbsp;·&nbsp; Allison &amp; Corey: Apr 18–21</div>
+    </div>
+  </div>
+
+  <!-- THURSDAY APR 16 -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Thursday</div>
+      <div class="day-date">April 16</div>
+      <span class="day-tag tag-arrival">Arrival</span>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Afternoon · Depart Houston</div>
+      <div class="event-card ev-teal">
+        <span class="event-badge badge-flight">UA592</span>
+        <div class="flight-row">
+          <div><div class="flight-city">IAH</div><div class="flight-time">4:52 PM</div></div>
+          <div class="flight-line">
+            <div class="flight-duration">3h 54m</div>
+            <div class="flight-track"></div>
+          </div>
+          <div style="text-align:right;"><div class="flight-city">BOS</div><div class="flight-time">9:46 PM</div></div>
+        </div>
+        <div class="flight-meta">United Airlines · Confirmation: DOZBZM</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Evening · ~10:30 PM</div>
+      <div class="event-card ev-gray">
+        <div class="event-name">Check in — Holiday Inn Cambridge</div>
+        <div class="event-detail">Late arrival. Grab a bite near the hotel if needed — light night.</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRIDAY APR 17 -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Friday</div>
+      <div class="day-date">April 17</div>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Morning</div>
+      <div class="event-card ev-amber">
+        <div class="event-name">TBD — Explore Boston</div>
+        <div class="event-detail">Neighborhoods, coffee, sightseeing. No obligations — open morning.</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon</div>
+      <div class="event-card ev-blue">
+        <div class="event-name">BAA Health &amp; Fitness Expo — Bib Pickup</div>
+        <div class="event-detail">John B. Hynes Veterans Memorial Convention Center · 900 Boylston St, Boston · Open Fri Apr 17: 10am–7pm · Bib pickup required in person with photo ID &amp; Digital Number Pick-Up Pass</div>
+        <div class="event-note">Bib #1594 · Wave 1 · Corral 2 · Digital Pick-Up Pass emailed by early April — bring it!</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Evening</div>
+      <div class="event-card ev-teal">
+        <div class="event-name">TBD — Dinner</div>
+        <div class="event-detail">Restaurant TBD — Boston or Cambridge area</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SATURDAY APR 18 -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Saturday</div>
+      <div class="day-date">April 18</div>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Morning</div>
+      <div class="event-card ev-amber">
+        <div class="event-name">TBD — Free morning</div>
+        <div class="event-detail">Explore, rest, or continue pre-race prep. Allison &amp; Corey en route.</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon · Allison &amp; Corey arrive</div>
+      <div class="event-card ev-teal">
+        <div class="event-name">Allison &amp; Corey fly in</div>
+        <div class="event-detail">Flight details TBD · Check in at Holiday Inn Cambridge/Somerville</div>
+        <div class="who-row"><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon · Late Lunch</div>
+      <div class="event-card ev-coral">
+        <div class="event-name">Lunch near Fenway Park</div>
+        <div class="event-detail">Restaurant TBD · Meeting Sam, Jade &amp; baby Frank · Timing TBD — must wrap by ~3:30 PM for first pitch</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span><span class="who-chip">Sam</span><span class="who-chip">Jade</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon · 4:10 PM First Pitch</div>
+      <div class="event-card ev-blue">
+        <div class="event-name">Red Sox vs. TBD — Fenway Park</div>
+        <div class="event-detail">Fenway Park, 4 Jersey St, Boston · First pitch 4:10 PM ET</div>
+        <div class="event-note">Tickets held by Todd — digital tickets via SeatGeek app · Head to Fenway directly from lunch</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Evening</div>
+      <div class="event-card ev-teal">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">TBD — Post-game dinner or drinks</div>
+        <div class="event-detail">After the game — neighborhood TBD</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUNDAY APR 19 -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Sunday</div>
+      <div class="day-date">April 19 — Day Before the Race</div>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Morning / Afternoon</div>
+      <div class="event-card ev-teal">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">Boston Tea Party Ships &amp; Museum</div>
+        <div class="event-detail">Congress St Bridge, Boston · Tour approx. 1.5 hrs · Book tickets in advance</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+      <div class="event-card ev-amber" style="margin-top:8px;">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">TBD — Additional sightseeing or activity</div>
+        <div class="event-detail">Open window for another attraction, neighborhood walk, or whatever sounds good</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon</div>
+      <div class="event-card ev-gray">
+        <div class="event-name">Rest — Pre-race wind down</div>
+        <div class="event-detail">Feet up, hydrate, early night. Race is tomorrow.</div>
+        <div class="who-row"><span class="who-chip">Todd</span></div>
+      </div>
+      <div class="event-card ev-amber" style="margin-top:8px;">
+        <div class="event-name">TBD — Open afternoon</div>
+        <div class="event-detail">While Todd rests up, this window is open — explore, shop, or relax however you like</div>
+        <div class="who-row"><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Evening · 5:30 PM</div>
+      <div class="event-card ev-purple">
+        <div class="event-name">Pre-Race Team Dinner — Life in Stride Racing</div>
+        <div class="event-detail">Restaurant TBD · 5:30 PM</div>
+        <div class="event-note">Todd &amp; Laura only for this one</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONDAY APR 20 — RACE DAY -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Monday</div>
+      <div class="day-date">April 20 — Patriots' Day</div>
+      <span class="day-tag tag-race">Race Day</span>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Early Morning</div>
+      <div class="event-card ev-race">
+        <span class="event-badge badge-race">Boston Marathon 2026</span>
+        <div class="event-name">Todd departs for Boston Common</div>
+        <div class="event-detail">Bus from Boston Common → Athlete's Village, Hopkinton · Buses load early — confirm departure time on BAA runner guide</div>
+        <div class="event-note">Bib #1594 · Wave 1 · Corral 2</div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Morning · 10:00 AM Gun Time</div>
+      <div class="event-card ev-race">
+        <div class="event-name">Wave 1 Start — 26.2 miles</div>
+        <div class="event-detail">Hopkinton → Boylston Street finish line, Boston</div>
+        <div class="event-note">Laura, Allison &amp; Corey — spectator viewing plan TBD</div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon</div>
+      <div class="event-card ev-amber">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">TBD — Post-race afternoon</div>
+        <div class="event-detail">Open window — celebrate, eat, explore, or just decompress. Plans TBD once we see how race day unfolds.</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Evening</div>
+      <div class="event-card ev-teal">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">TBD — Celebration dinner</div>
+        <div class="event-detail">Open evening — restaurant TBD. A great night to go somewhere special.</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUESDAY APR 21 -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-name">Tuesday</div>
+      <div class="day-date">April 21</div>
+      <span class="day-tag tag-departure">Departure</span>
+    </div>
+
+    <div class="session">
+      <div class="session-label">Morning</div>
+      <div class="event-card ev-coral">
+        <span class="event-badge badge-tentative">Tentative</span>
+        <div class="event-name">Freedom Trail / Boston History Walking Tour</div>
+        <div class="event-detail">Laura's pick — guided or self-guided historic Boston walk · Allow 2–3 hrs</div>
+        <div class="event-note">Easy pace — Todd's legs will appreciate it post-marathon!</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span></div>
+      </div>
+    </div>
+
+    <div class="session" style="margin-top:10px;">
+      <div class="session-label">Afternoon · Head to Airport by ~2:30 PM</div>
+      <div class="event-card ev-teal">
+        <span class="event-badge badge-flight">UA1392</span>
+        <div class="flight-row">
+          <div><div class="flight-city">BOS</div><div class="flight-time">4:53 PM</div></div>
+          <div class="flight-line">
+            <div class="flight-duration">4h 34m</div>
+            <div class="flight-track"></div>
+          </div>
+          <div style="text-align:right;"><div class="flight-city">IAH</div><div class="flight-time">8:27 PM</div></div>
+        </div>
+        <div class="flight-meta">United Airlines · Confirmation: DOZBZM</div>
+        <div class="who-row"><span class="who-chip">Todd</span><span class="who-chip">Laura</span><span class="who-chip">Allison</span><span class="who-chip">Corey</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<footer>
+  Items marked <strong>Tentative</strong> are soft plans to be confirmed as the trip approaches.<br>
+  All restaurant selections and evening plans are TBD. Rideshare / public transit only — no rental car.<br><br>
+  Holiday Inn Boston – Cambridge Area · 30 Washington St, Somerville MA 02143<br>
+  United Airlines confirmation: <strong>DOZBZM</strong>
+</footer>
+
+</body>
+</html>
